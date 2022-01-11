@@ -1,0 +1,15 @@
+1. login/logout/reset
+   -> login ✅
+   -> singin ✅
+   -> update Password ✅
+   -> Forgot Password 
+   -> reset 
+   -> logout 
+
+2. GET paper
+   -> get paper 
+   -> (go through user agar ha toh ans data vrna qutions) 
+
+3. POST responce 
+
+4. GET dashbord data 

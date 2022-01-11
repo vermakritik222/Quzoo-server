@@ -1,0 +1,7 @@
+# dependencies
+/node_modules
+/dev-data
+/.vscode
+
+# credintials
+.env
