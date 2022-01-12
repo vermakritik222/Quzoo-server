@@ -1,5 +1,6 @@
 const { Router } = require('express');
 const authController = require('../controllers/AuthenticationController');
+const userController = require('../controllers/userController');
 
 const router = Router();
 
@@ -10,4 +11,7 @@ router.patch(
     authController.protect,
     authController.updatePassword
 );
+
+router.post('/postAns', authController.checkUser, userController.postAns);
+
 module.exports = router;
