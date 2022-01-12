@@ -5,3 +5,6 @@
 
 # credintials
 .env
+
+# dev data
+/devdata
