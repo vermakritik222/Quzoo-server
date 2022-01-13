@@ -1,6 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
 const chtchasync = require('../util/chtchasync');
 const QuestionSets = require('../model/questionsSetModel');
+const QuestionSetsMetadata = require('../model/questionsSetMetadataModel');
 
 exports.postAll = chtchasync(async (req, res, next) => {
     // (1) get the data from user and add the uuid's in qutions and options
@@ -50,7 +51,19 @@ exports.postAll = chtchasync(async (req, res, next) => {
         }
     }
 
-    const doc = await QuestionSets.create(req.body);
+    const SetsMetadata = await QuestionSetsMetadata.create({
+        SetTitle: req.body.SetTitle,
+        SetQuestionNumber: req.body.SetQuestionNumber,
+        SetDuration: req.body.SetDuration,
+        SetYear: req.body.SetYear,
+        SetDescription: req.body.SetDescription,
+        SetBackgroundImg: req.body.SetBackgroundImg,
+    });
+    const doc = await QuestionSets.create({
+        SetCode: req.body.SetCode,
+        Metadata: SetsMetadata._id,
+        Questions: req.body.Questions,
+    });
     // (2) send the data to  responce
     res.status(200).json({
         status: 'success',
@@ -58,8 +71,16 @@ exports.postAll = chtchasync(async (req, res, next) => {
     });
 });
 
+exports.getQuestionPaperMetadata = chtchasync(async (req, res, next) => {
+    const data = await QuestionSetsMetadata.find();
+    res.status(200).json({
+        status: 'success',
+        data,
+    });
+});
+
 exports.getQuestionPaper = chtchasync(async (req, res, next) => {
-    const data = await QuestionSets.find({ SetCode: req.params.setcode });
+    const data = await QuestionSets.findOne({ SetCode: req.params.setcode });
     res.status(200).json({
         status: 'success',
         data,

@@ -5,8 +5,7 @@ const userMetaData = require('../model/userMetadataModel');
 const Dashboard = require('../model/userDashboardModel');
 
 exports.postAns = chtchasync(async (req, res, next) => {
-    // req.user._id = '61dee825b12b4126e41db3e5';
-    // (1) check weather user is loged in or not
+    // (1) check weather user is logged in or not
     if (!req.user._id) {
         next();
     }
@@ -99,7 +98,7 @@ exports.postAns = chtchasync(async (req, res, next) => {
         iterator++;
     }
 
-    // (5) counting the nymber of currecet ans
+    // (5) counting the number of correct ans
     let total_phyQ = 0;
     let total_cheQ = 0;
     let total_mathsQ = 0;
@@ -175,6 +174,40 @@ exports.postAns = chtchasync(async (req, res, next) => {
     // (8) send the result
     res.status(200).json({
         status: 'success',
-        data: data,
+        data,
     });
+});
+
+exports.checkUserInfo = chtchasync(async (req, res, next) => {
+    console.log(req.user._id, 'stage 1');
+    const currentUserDashboard = await Dashboard.findOne({
+        userId: req.user._id,
+    });
+    console.log(currentUserDashboard, 'stage 2');
+    if (currentUserDashboard) {
+        const paper = currentUserDashboard.paperInfo.find((el) => {
+            if (el.paperInfo.setcode === req.params.setcode) {
+                return el;
+            }
+        });
+        console.log(req.params.setcode, 'req.params.setcode');
+        console.log(
+            currentUserDashboard.paperInfo[0].paperInfo.setcode,
+            'req.params.setcode'
+        );
+        console.log(paper.subansId, 'stage 3');
+        if (paper) {
+            const data = await userMetaData.findById(paper.subansId);
+            console.log(data, 'stage 4');
+            res.status(200).json({
+                status: 'success',
+                data,
+            });
+        } else {
+            console.log('document not found', 'stage 4 part 2');
+            res.status(404).json({
+                status: 'document not found',
+            });
+        }
+    }
 });

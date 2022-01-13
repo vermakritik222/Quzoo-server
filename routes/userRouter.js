@@ -13,5 +13,10 @@ router.patch(
 );
 
 router.post('/postAns', authController.checkUser, userController.postAns);
+router.get(
+    '/info/papers/:setcode',
+    authController.checkUser,
+    userController.checkUserInfo
+);
 
 module.exports = router;
