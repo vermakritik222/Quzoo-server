@@ -1,6 +1,8 @@
-# Backend
+# Quzoo Backend
 
 ## Project Description
+
+Quzoo is a node.js express server-side quiz application. It communicates between the server and the client via REST API's.
 
 ## Routes
 
