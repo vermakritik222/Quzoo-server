@@ -21,21 +21,22 @@ const creatSendToken = (user, statusCode, res) => {
         // httpOnly: true,
     };
 
+    const userData = {
+        username: user.username,
+        email: user.email,
+        photo: user.photo,
+    };
+
     if (
         process.env.NODE_ENV === 'production' ||
         process.env.NODE_ENV === 'development'
     ) {
-        // cookieOptions.secure = true;
         res.status(statusCode).cookie('jwt', token, cookieOptions).json({
             status: 'success',
-            token,
+            // token,
+            user: userData,
         });
     }
-
-    // res.status(statusCode).json({
-    //     status: 'success',
-    //     token,
-    // });
 };
 
 exports.signup = chtchasync(async (req, res, next) => {
@@ -68,7 +69,6 @@ exports.protect = chtchasync(async (req, res, next) => {
     ) {
         token = req.headers.authorization.split(' ')[1];
     }
-    // console.log(token);
 
     if (!token) {
         return next(
@@ -78,6 +78,7 @@ exports.protect = chtchasync(async (req, res, next) => {
             )
         );
     }
+
     // 2) verification of token
     const decode = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
 
@@ -101,34 +102,24 @@ exports.protect = chtchasync(async (req, res, next) => {
             )
         );
     }
-    // Greant acces to protected rout
+
     req.user = freshUser;
     next();
-});
-
-exports.updatePassword = chtchasync(async (req, res, next) => {
-    const user = await User.findById(req.user.id).select('password');
-    //  check if POSTed current password is correct
-    if (!user.correctPassword(user.password, req.body.currentPassword)) {
-        next(new AppError('Your current password is wrong', 401));
-    }
-    // if so update password
-    user.password = req.body.Password;
-    user.passwordConformation = req.body.passwordConformation;
-    await user.save();
-    // log user in send jwt
-    creatSendToken(user, 200, res);
 });
 
 exports.checkUser = chtchasync(async (req, res, next) => {
     // 1) getting token and check of its there
     let token;
-    if (
-        req.headers.authorization &&
-        req.headers.authorization.startsWith('Bearer')
-    ) {
-        token = req.headers.authorization.split(' ')[1];
+    if (req.cookies !== null) {
+        token = req.cookies.jwt;
     }
+    // console.log(req.cookies.jwt);
+    // if (
+    //     req.headers.authorization &&
+    //     req.headers.authorization.startsWith('Bearer')
+    // ) {
+    //     token = req.headers.authorization.split(' ')[1];
+    // }
 
     if (!token) {
         return next(
@@ -162,7 +153,20 @@ exports.checkUser = chtchasync(async (req, res, next) => {
             )
         );
 
-    // Genrate acces to protected rout
     req.user = user;
     next();
+});
+
+exports.updatePassword = chtchasync(async (req, res, next) => {
+    const user = await User.findById(req.user.id).select('password');
+    //  check if POSTed current password is correct
+    if (!user.correctPassword(user.password, req.body.currentPassword)) {
+        next(new AppError('Your current password is wrong', 401));
+    }
+    // if so update password
+    user.password = req.body.Password;
+    user.passwordConformation = req.body.passwordConformation;
+    await user.save();
+    // log user in send jwt
+    creatSendToken(user, 200, res);
 });
