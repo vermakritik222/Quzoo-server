@@ -3,30 +3,30 @@ const userRouter = require('./routes/userRouter');
 const questionRouter = require('./routes/questionRouter');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const universalMiddleware = require('./middlewares/universalMiddleware');
 
 const app = express();
 
+// JSON Parser
 app.use(express.json());
 
-// cookieParser
+// Cookie Parser
 app.use(cookieParser());
 
 // Serving Static files
 app.use(express.static(`${__dirname}/public`));
 
-// Sending time
-app.use((req, res, next) => {
-    req.requestTime = new Date().toISOString;
-    next();
-});
+// Middleware
+app.use(universalMiddleware.sendTimeStamp);
 
+// cors policies
 const coresOptions = {
     credentials: true,
     origin: ['http://localhost:3000/', 'http://127.0.0.1:3000'],
 };
 app.use(cors(coresOptions));
 
-// main routes
+// Routes
 app.use('/api/v1/questions', questionRouter);
 app.use('/api/v1/user', userRouter);
 

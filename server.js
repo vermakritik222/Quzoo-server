@@ -15,7 +15,6 @@ mongoose
         // useFindAndModify: false,
     })
     .then(() => {
-        // console.log(con.connections);
         console.log('DB is connected to app.....');
     })
     .catch((err) => {

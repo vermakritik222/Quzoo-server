@@ -1,7 +1,7 @@
 const { v4: uuidv4 } = require('uuid');
-const chtchasync = require('../util/chtchasync');
 const QuestionSets = require('../model/questionsSetModel');
 const QuestionSetsMetadata = require('../model/questionsSetMetadataModel');
+const chtchasync = require('../util/chtchasync');
 
 exports.postAll = chtchasync(async (req, res, next) => {
     // (1) get the data from user and add the uuid's in qutions and options

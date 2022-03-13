@@ -1,8 +1,8 @@
-const chtchasync = require('../util/chtchasync');
 const User = require('../model/userModel');
 const QuestionSets = require('../model/questionsSetModel');
 const userMetaData = require('../model/userMetadataModel');
 const Dashboard = require('../model/userDashboardModel');
+const chtchasync = require('../util/chtchasync');
 
 exports.postAns = chtchasync(async (req, res, next) => {
     // (1) check weather user is logged in or not
