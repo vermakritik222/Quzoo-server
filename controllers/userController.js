@@ -211,3 +211,14 @@ exports.checkUserInfo = chtchasync(async (req, res, next) => {
         }
     }
 });
+
+exports.getUserDashboard = chtchasync(async (req, res, next) => {
+    const user = req.user;
+
+    const userDash = await Dashboard.findOne({ userId: user._id });
+    // console.log(user);
+    res.json({
+        status: 'success',
+        data: userDash,
+    });
+});

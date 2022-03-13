@@ -39,7 +39,7 @@ exports.checkUser = chtchasync(async (req, res, next) => {
                 401
             )
         );
-    console.log(await user.changedPasswordAfter(decode.iat));
+    // console.log(await user.changedPasswordAfter(decode.iat));
 
     // 4) check if user changed pas after the token was issued
     if (await user.changedPasswordAfter(decode.iat))
