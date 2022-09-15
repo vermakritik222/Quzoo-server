@@ -15,6 +15,7 @@ app.use(cookieParser());
 
 // Serving Static files
 app.use(express.static(`${__dirname}/public`));
+app.use(express.static(`${__dirname}/build`));
 
 // Middleware
 app.use(universalMiddleware.sendTimeStamp);
@@ -26,6 +27,10 @@ const coresOptions = {
 };
 app.use(cors(coresOptions));
 
+app.get('/', (req, res) => {
+    // res.sendFile()
+    res.sendFile('build/index.html', { root: __dirname });
+});
 // Routes
 app.use('/api/v1/questions', questionRouter);
 app.use('/api/v1/user', userRouter);
