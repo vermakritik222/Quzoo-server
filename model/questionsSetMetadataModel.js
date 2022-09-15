@@ -10,6 +10,7 @@ const questionSetMetadataSchema = new mongoose.Schema({
     SetDuration: {
         type: String,
     },
+    SetTotalMarks: String,
     SetBackgroundImg: String,
     SetDescription: String,
     SetYear: {
